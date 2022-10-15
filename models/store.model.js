@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-import categoryModel from "./category.model";
-
 const storeSchema = new mongoose.Schema(
   {
     name: String,
@@ -13,11 +11,6 @@ const storeSchema = new mongoose.Schema(
     longitude: Number,
     latitude: Number,
     mobile: Number,
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      // * check that user type should be owner
-      ref: "User",
-    },
     image: {
       data: Buffer,
       contentType: String,
@@ -37,4 +30,4 @@ const storeSchema = new mongoose.Schema(
   }
 );
 
-export default new mongoose.model("Store", storeSchema);
+module.exports = new mongoose.model("Store", storeSchema);

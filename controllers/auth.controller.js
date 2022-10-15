@@ -9,30 +9,35 @@ const register = async (req, res) => {
         message: err,
       });
     } else {
-      const { name, longitude, latitude, address, email, mobile, password } =
-        req.body;
+      if (!foundUser) {
+        const { name, longitude, latitude, address, email, mobile, password } =
+          req.body;
 
-      bcrypt.hash(password, 10, async (bcryptError, hashedPassword) => {
-        if (bcryptError) {
-          return res.status(401).send({ message: bcryptError });
-        } else {
-          const newUser = User({
-            name: name,
-            longitude: longitude,
-            latitude: latitude,
-            address: address,
-            email: email,
-            mobile: mobile,
-            password: hashedPassword,
-          });
+        bcrypt.hash(password, 10, async (bcryptError, hashedPassword) => {
+          if (bcryptError) {
+            return res.status(401).send({ message: bcryptError });
+          } else {
+            // TODO add upi's
+            const newUser = User({
+              name: name,
+              longitude: longitude,
+              latitude: latitude,
+              address: address,
+              email: email,
+              mobile: mobile,
+              password: hashedPassword,
+            });
 
-          await newUser.save();
+            await newUser.save();
 
-          const token = jwt.sign({ data: newUser }, process.env.JWT_SECRET);
+            const token = jwt.sign({ data: newUser }, process.env.JWT_SECRET);
 
-          res.send(token);
-        }
-      });
+            res.send(token);
+          }
+        });
+      } else {
+        return res.status(401).send({ message: "Already Exists" });
+      }
     }
   });
 };
@@ -46,13 +51,13 @@ const login = async (req, res) => {
         return res.status(401).send({ message: bcryptError });
       } else {
         if (result) {
-          const token = jwt.sign({ data: newUser }, process.env.JWT_SECRET);
+          const token = jwt.sign({ data: foundUser }, process.env.JWT_SECRET);
 
           res.send(token);
         } else {
           return res
             .status(401)
-            .send({ message: "Error occured in Signing in" });
+            .send({ message: "Error occurred in Signing in" });
         }
       }
     });
