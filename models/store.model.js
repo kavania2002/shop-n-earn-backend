@@ -11,6 +11,9 @@ const storeSchema = new mongoose.Schema(
     longitude: Number,
     latitude: Number,
     mobile: Number,
+    tierIds: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Category" }
+    ],
     image: {
       data: Buffer,
       contentType: String,
