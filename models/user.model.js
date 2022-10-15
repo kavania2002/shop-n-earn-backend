@@ -1,14 +1,29 @@
 const mongoose = require("mongoose");
 
+const userType = Object.freeze({
+  USER: "user",
+  OWNER: "owner",
+});
+
 const userSchema = new mongoose.Schema(
   {
     name: String,
+    username: String,
+    email: String,
+    password: String,
+    upi: String,
+    city: String,
     longitude: Number,
     latitude: Number,
-    address: String,
-    email: String,
     mobile: Number,
-    password: String,
+    type: {
+      type: String,
+      enum: Object.values(userType),
+    },
+    image: {
+      data: Buffer,
+      contentType: String,
+    },
   },
   {
     timestamps: {
