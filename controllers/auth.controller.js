@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const register = async (req, res) => {
   User.findOne({ email: req.body.email }, async (err, foundUser) => {
     if (err) {
-      console.log(err);
       res.status(400).send({
         message: err,
       });
@@ -50,9 +49,15 @@ const login = async (req, res) => {
           const token = jwt.sign({ data: newUser }, process.env.JWT_SECRET);
 
           res.send(token);
+        } else {
+          return res
+            .status(401)
+            .send({ message: "Error occured in Signing in" });
         }
       }
     });
+  } else {
+    return res.status(401).send({ message: "Unknown username" });
   }
 };
 
