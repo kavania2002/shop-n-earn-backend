@@ -13,6 +13,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// routing folders
+app.use("/api", require("./routes/routes"));
+
 // sample api
 app.get("/", (req, res) => {
   res.send("Welcome to Shop and Earn");
