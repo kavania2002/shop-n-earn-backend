@@ -10,6 +10,10 @@ const coinLogSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Store",
         },
+        originalAmount: {
+            type: Number,
+            default: 0,
+        },
         coinsUsed: {
             type: Number,
             default: 0,
