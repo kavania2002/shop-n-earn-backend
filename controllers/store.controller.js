@@ -67,4 +67,8 @@ const login = async (req, res) => {
     }
 }
 
+const get = async (req, res) => {
+    const listOfStores = {}
+}
+
 module.exports = { login, register };
