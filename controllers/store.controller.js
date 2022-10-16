@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+const User = require("../models/user.model");
 const Tier = require("../models/tier.model");
 const Store = require("../models/store.model");
 const userTier = require("../models/userTier.model");
@@ -131,5 +132,27 @@ const getStoreForUser = async (req, res) => {
   }
   res.send(resultJson);
 };
+
+const getStoreDetails = async (req, res) => {
+  // all detail about store
+  // current user tier
+  // next user tier
+  // percentage to next tier
+  
+  const { store, user } = req.body;
+
+  const foundStore = await Store.findOne({ _id: store }).populate("tierIds");
+  const foundUser = await User.findOne({ _id: user });
+  const foundUserTier = await userTier.findOne({ user: user, storeId: store });
+  const foundTier = await Tier.findOne({ shopId: store, level: foundUserTier.tier });
+
+  const resultJson = {
+    storeData: foundStore,
+    currentTier: foundUserTier.tier,
+    nextTier: foundUserTier.tier + 1,
+    percentage: (foundUserTier.totalAmount - foundTier.minValue) / (foundTier.maxValue - foundTier.minValue) * 100,
+  };
+
+  res.send(resultJson);
 
 module.exports = { login, register, get, getStoreForUser };

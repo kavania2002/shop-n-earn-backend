@@ -89,8 +89,23 @@ const getAllForStore = async (req, res) => {
         });
       } else {
         if (foundStore) {
-          const foundTransactions = await Transaction.find({ store: store });
-          res.send(foundTransactions);
+          const foundTransactions = await Transaction.find({ store: store }).
+                                      populate("userId");
+
+          resultJson = { data: [] };
+            
+          foundTransactions.forEach((transaction) => {
+            const dataItem = {
+              name: transaction.userId.name,
+              upiId: transaction.userId.upi,
+              amount: transaction.amount,
+              dateTime: transaction.created_at,
+            };
+            resultJson.data.push(dataItem);
+          });
+
+
+          res.send(resultJson);
         } else {
           return res.status(401).send({ message: "Store not found" });
         }
