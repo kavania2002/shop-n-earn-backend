@@ -156,4 +156,4 @@ const getStoreDetails = async (req, res) => {
   res.send(resultJson);
 };
 
-module.exports = { login, register, get, getStoreForUser };
+module.exports = { login, register, get, getStoreForUser, getStoreDetails };
