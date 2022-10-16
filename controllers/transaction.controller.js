@@ -98,3 +98,5 @@ const getAllForStore = async (req, res) => {
     }
   );
 };
+
+module.exports = { create, getAllForUser, getAllForStore };
