@@ -9,7 +9,6 @@ const cors = require("cors");
 
 const app = express();
 
-
 // adding the cors to make it accessible
 app.use(cors());
 
@@ -24,7 +23,6 @@ app.use("/api", require("./routes/routes"));
 app.get("/", (req, res) => {
   res.send("Welcome to Shop and Earn");
 });
-
 
 app.listen(process.env.PORT || 2300, (err) => {
   if (err) console.log(err);

@@ -1,20 +1,20 @@
-const Category = require('../models/category.model');
+const Category = require("../models/category.model");
 
 const create = async (req, res) => {
-    const { name } = req.body;
+  const { name } = req.body;
 
-    const newCategory = new Category({
-        name: name,
-    });
+  const newCategory = new Category({
+    name: name,
+  });
 
-    await newCategory.save();
+  await newCategory.save();
 
-    res.send("New Category Saved");
-}
+  res.send("New Category Saved");
+};
 
 const get = async (req, res) => {
-    const categories = await Category.find();
-    res.send(categories);
-}
+  const categories = await Category.find();
+  res.send(categories);
+};
 
-module.exports = { create, get }
+module.exports = { create, get };
