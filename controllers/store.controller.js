@@ -111,6 +111,7 @@ const getStoreForUser = async (req, res) => {
 
   currentUserTier.forEach((tier) => {
     const dataItem = {
+      id: tier.storeId._id,
       storeName: tier.storeId.name,
       storeImage: tier.storeId.image,
       tier: tier.tier,
