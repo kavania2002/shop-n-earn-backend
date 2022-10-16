@@ -65,17 +65,22 @@ const login = async (req, res) => {
         if (result) {
           const token = jwt.sign({ data: foundStore }, process.env.JWT_SECRET);
 
-          res.send(token);
-        } else {
-          return res
-            .status(401)
-            .send({ message: "Error occurred in Signing in" });
-        }
-      }
-    });
-  } else {
-    return res.status(401).send({ message: "Unknown username" });
-  }
-};
+                    res.send({token: token});
+                } else {
+                    return res
+                        .status(401)
+                        .send({ message: "Error occurred in Signing in" });
+                }
+            }
+        });
+    } else {
+        return res.status(401).send({ message: "Unknown username" });
+    }
+}
 
-module.exports = { login, register };
+const get = async (req, res) => {
+    const listOfStores = await Store.find();
+    res.send({stores: listOfStores});
+}
+
+module.exports = { login, register, get };

@@ -9,6 +9,10 @@ const cors = require("cors");
 
 const app = express();
 
+
+// adding the cors to make it accessible
+app.use(cors());
+
 // configuring the bodyParser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,13 +25,6 @@ app.get("/", (req, res) => {
   res.send("Welcome to Shop and Earn");
 });
 
-// adding the cors to make it accessible
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  })
-);
 
 app.listen(process.env.PORT || 2300, (err) => {
   if (err) console.log(err);
