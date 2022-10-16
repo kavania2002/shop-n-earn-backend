@@ -68,7 +68,8 @@ const login = async (req, res) => {
 }
 
 const get = async (req, res) => {
-    const listOfStores = {}
+    const listOfStores = await Store.find();
+    res.send({stores: listOfStores});
 }
 
-module.exports = { login, register };
+module.exports = { login, register, get };
