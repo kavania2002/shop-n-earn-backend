@@ -1,6 +1,9 @@
 const jwt = require("jsonwebtoken");
-const Store = require("../models/store.model");
 const bcrypt = require("bcrypt");
+
+const Tier = require("../models/tier.model");
+const Store = require("../models/store.model");
+const userTier = require("../models/userTier.model");
 
 const register = async (req, res) => {
   Store.findOne({ email: req.body.email }, async (err, foundStore) => {
@@ -44,7 +47,7 @@ const register = async (req, res) => {
 
             const token = jwt.sign({ data: newStore }, process.env.JWT_SECRET);
 
-            res.send(token);
+            res.send({ token: token, isTierSetup: false });
           }
         });
       } else {
@@ -58,29 +61,75 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   const foundStore = await Store.findOne({ email: email });
   if (foundStore) {
-    bcrypt.compare(password, foundStore.password, (bcryptError, result) => {
-      if (bcryptError) {
-        return res.status(401).send({ message: bcryptError });
-      } else {
-        if (result) {
-          const token = jwt.sign({ data: foundStore }, process.env.JWT_SECRET);
+    bcrypt.compare(
+      password,
+      foundStore.password,
+      async (bcryptError, result) => {
+        if (bcryptError) {
+          return res.status(401).send({ message: bcryptError });
+        } else {
+          if (result) {
+            const token = jwt.sign(
+              { data: foundStore },
+              process.env.JWT_SECRET
+            );
 
-                    res.send({token: token});
-                } else {
-                    return res
-                        .status(401)
-                        .send({ message: "Error occurred in Signing in" });
-                }
+            const shopTiers = await Tier.find({ storeId: foundStore._id });
+
+            if (shopTiers.length == 0) {
+              res.send({ token: token, isTierSetup: false });
+            } else {
+              res.send({ token: token, isTierSetup: true });
             }
-        });
-    } else {
-        return res.status(401).send({ message: "Unknown username" });
-    }
-}
+          } else {
+            return res
+              .status(401)
+              .send({ message: "Error occurred in Signing in" });
+          }
+        }
+      }
+    );
+  } else {
+    return res.status(401).send({ message: "Unknown username" });
+  }
+};
 
 const get = async (req, res) => {
-    const listOfStores = await Store.find();
-    res.send({stores: listOfStores});
-}
+  const listOfStores = await Store.find();
+  res.send({ stores: listOfStores });
+};
 
-module.exports = { login, register, get };
+const getStoreForUser = async (req, res) => {
+  const { user } = req.body;
+
+  const resultJson = { data: [] };
+
+  const currentUserTier = await userTier
+    .find({ user: user })
+    .populate("storeId");
+
+  currentUserTier.forEach((tier) => {
+    const dataItem = {
+      storeName: tier.storeId.name,
+      storeImage: tier.storeId.image,
+      tier: tier.tier,
+    };
+    resultJson.data.push(dataItem);
+  });
+
+  if (resultJson.data.length == 0) {
+    const listOfStores = await Store.find();
+
+    listOfStores.forEach((store) => {
+      const dataItem = {
+        storeName: store.name,
+        storeImage: store.image,
+        tier: 0,
+      };
+      resultJson.data.push(dataItem);
+    });
+  }
+  res.send(resultJson);
+};
+
+module.exports = { login, register, get, getStoreForUser };

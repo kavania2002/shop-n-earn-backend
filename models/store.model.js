@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Tier = require('../models/tier.model');
+const Tier = require("../models/tier.model");
 
 const storeSchema = new mongoose.Schema(
   {
@@ -13,9 +13,7 @@ const storeSchema = new mongoose.Schema(
     longitude: Number,
     latitude: Number,
     mobile: Number,
-    tierIds: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Tier" }
-    ],
+    tierIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tier" }],
     image: {
       data: Buffer,
       contentType: String,

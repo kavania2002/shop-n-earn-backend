@@ -37,7 +37,7 @@ const isStore = (req, res, next) => {
   } else {
     return res.status(401).send({ message: "Permission Denied" });
   }
-}
+};
 
 const isUser = (req, res, next) => {
   const isStoreValue = req.user.isStore;
@@ -46,6 +46,6 @@ const isUser = (req, res, next) => {
   } else {
     return res.status(401).send({ message: "Permission Denied" });
   }
-}
+};
 
 module.exports = { authMiddleware, isStore, isUser };

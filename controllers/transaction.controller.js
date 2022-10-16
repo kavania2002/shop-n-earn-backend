@@ -4,6 +4,7 @@ const User = require("../models/user.model");
 const Store = require("../models/store.model");
 const UserTier = require("../models/userTier.model");
 const UserCoin = require("../models/userCoin.model");
+const Tier = require("../models/tier.model");
 
 const create = async (req, res) => {
   const { store, user, amount, status, upi } = req.body;
@@ -17,6 +18,37 @@ const create = async (req, res) => {
   });
 
   await newTransaction.save();
+
+  const currentUserTier = await UserTier.findOne({
+    userId: user.data._id,
+    storeId: store,
+  });
+
+  const currentTier = await Tier.findOne({
+    shopId: store,
+    level: currentUserTier.tier,
+  });
+
+  currentUserTier.totalAmount += amount;
+  if (currentUserTier.totalAmount >= currentTier.maxAmount) {
+    currentUserTier.tier += 1;
+  }
+
+  await currentUserTier.save();
+
+  const currentUserCoin = await UserCoin.findOne({
+    userId: user.data._id,
+    storeId: store,
+  });
+
+  const finalTier = await Tier.findOne({
+    shopId: store,
+    level: currentUserTier.tier,
+  });
+
+  currentUserCoin.coins += Math.floor(amount * finalTier.amountToCoinRatio);
+
+  await currentUserCoin.save();
 
   res.send(newTransaction);
 };
