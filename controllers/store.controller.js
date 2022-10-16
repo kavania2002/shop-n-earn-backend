@@ -77,18 +77,9 @@ const login = async (req, res) => {
             const shopTiers = await Tier.find({ storeId: foundStore._id });
 
             if (shopTiers.length == 0) {
-              res.send({ token: token, isTierSetup: false });
+              return res.send({ token: token, isTierSetup: false, user: foundStore });
             } else {
-                if (result) {
-                    const token = jwt.sign({ data: foundStore }, process.env.JWT_SECRET);
-
-                    res.send({token: token, user: foundStore});
-                } else {
-                    return res
-                        .status(401)
-                        .send({ message: "Error occurred in Signing in" });
-                }
-              res.send({ token: token, isTierSetup: true });
+              res.send({ token: token, isTierSetup: true, user: foundStore });
             }
           } else {
             return res
