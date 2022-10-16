@@ -11,7 +11,7 @@ const app = express();
 
 
 // adding the cors to make it accessible
-app.use(cors());
+app.use(cors({origin}));
 
 // configuring the bodyParser
 app.use(bodyParser.json());

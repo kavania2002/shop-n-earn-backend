@@ -33,7 +33,7 @@ const register = async (req, res) => {
 
                         const token = jwt.sign({ data: newStore }, process.env.JWT_SECRET);
 
-                        res.send(token);
+                        res.send({token: token});
                     }
                 });
             } else {
@@ -54,7 +54,7 @@ const login = async (req, res) => {
                 if (result) {
                     const token = jwt.sign({ data: foundStore }, process.env.JWT_SECRET);
 
-                    res.send(token);
+                    res.send({token: token});
                 } else {
                     return res
                         .status(401)
