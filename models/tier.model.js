@@ -9,6 +9,8 @@ const tierSchema = new mongoose.Schema({
   shopId: { type: mongoose.Schema.Types.ObjectId, ref: "Store" },
   amountToCoinRatio: Number,
   coinToAmountRatio: Number,
+
+}, {
   timestamps: {
     createdAt: "created_at",
     updatedAt: "updated_at",

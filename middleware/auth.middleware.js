@@ -30,4 +30,22 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-module.exports = authMiddleware;
+const isStore = (req, res, next) => {
+  const isStoreValue = req.user.data.isStore;
+  if (isStoreValue != null && isStoreValue != undefined) {
+    next();
+  } else {
+    return res.status(401).send({ message: "Permission Denied" });
+  }
+}
+
+const isUser = (req, res, next) => {
+  const isStoreValue = req.user.isStore;
+  if (!isStore) {
+    next();
+  } else {
+    return res.status(401).send({ message: "Permission Denied" });
+  }
+}
+
+module.exports = { authMiddleware, isStore, isUser };

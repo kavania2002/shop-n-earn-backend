@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
+const Tier = require('../models/tier.model');
 
 const storeSchema = new mongoose.Schema(
   {
     name: String,
     shopId: String,
     email: String,
+    isStore: { type: Boolean, default: true },
     password: String,
     upi: String,
     city: String,
@@ -12,7 +14,7 @@ const storeSchema = new mongoose.Schema(
     latitude: Number,
     mobile: Number,
     tierIds: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Category" }
+      { type: mongoose.Schema.Types.ObjectId, ref: "Tier" }
     ],
     image: {
       data: Buffer,
