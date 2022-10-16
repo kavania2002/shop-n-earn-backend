@@ -62,3 +62,5 @@ const updateCoins = async (req, res) => {
     }
   );
 };
+
+module.exports = { create, getCoins, updateCoins }
